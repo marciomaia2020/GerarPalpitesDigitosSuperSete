@@ -25,6 +25,11 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
         .loading-circle {
             width: 80px;
             height: 80px;
@@ -169,6 +174,23 @@
             font-weight: bold;
             font-size: 14px;
         }
+
+        /* Contador de pares/ímpares com animação */
+        .contador-destaque {
+            animation: bounce 1s ease-in-out;
+        }
+        
+        .meta-atingida {
+            background: linear-gradient(45deg, #10b981, #34d399) !important;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+        
+        .meta-excedida {
+            background: linear-gradient(45deg, #ef4444, #f87171) !important;
+            color: white;
+            animation: pulse 0.5s infinite;
+        }
     </style>
 </head>
 <body class="bg-supersete-bg min-h-screen">
@@ -266,9 +288,50 @@
                         </div>
                     </div>
 
-                    <!-- Análise do Jogo Atual -->
+                    <!-- 🎯 CONTADOR DE PARES/ÍMPARES BEM DESTACADO -->
+                    <div class="mb-6 p-5 bg-gradient-to-br from-green-50 via-yellow-50 to-blue-50 border-4 border-green-400 rounded-xl shadow-lg">
+                        <div class="text-xl font-bold text-gray-800 mb-4 text-center">⚪ ESTRATÉGIA: NÚMEROS PARES vs ÍMPARES</div>
+                        
+                        <!-- Estatística do Último Sorteio -->
+                        <div id="estatisticaUltimoSorteio" class="mb-4 p-3 bg-green-100 border border-green-300 rounded-lg text-center">
+                            <div class="text-sm font-medium text-green-800">📊 ÚLTIMO SORTEIO TEVE:</div>
+                            <div class="text-lg font-bold text-green-900">
+                                <span id="paresUltimoSorteio" class="text-green-600">4</span> NÚMEROS PARES + 
+                                <span id="imparesUltimoSorteio" class="text-blue-600">3</span> NÚMEROS ÍMPARES
+                            </div>
+                            <div class="text-xs text-green-700">👆 Use como referência para seus palpites (7 colunas)</div>
+                        </div>
+                        
+                        <!-- Contador Visual Atual -->
+                        <div class="grid grid-cols-2 gap-6 mb-4">
+                            <div class="text-center p-4 bg-green-100 rounded-lg border-2 border-green-300">
+                                <div class="text-4xl font-bold text-green-600 contador-destaque" id="paresAtuais">0</div>
+                                <div class="text-lg font-bold text-green-700">NÚMEROS PARES</div>
+                                <div class="text-sm text-green-600">🎯 Meta: <span id="metaPares" class="font-bold">4</span></div>
+                                <div class="text-xs text-green-500">0, 2, 4, 6, 8</div>
+                            </div>
+                            <div class="text-center p-4 bg-blue-100 rounded-lg border-2 border-blue-300">
+                                <div class="text-4xl font-bold text-blue-600 contador-destaque" id="imparesAtuais">0</div>
+                                <div class="text-lg font-bold text-blue-700">NÚMEROS ÍMPARES</div>
+                                <div class="text-sm text-blue-600">🎯 Meta: <span id="metaImpares" class="font-bold">3</span></div>
+                                <div class="text-xs text-blue-500">1, 3, 5, 7, 9</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Status da Estratégia -->
+                        <div id="statusEstrategia" class="text-center p-3 rounded-lg font-bold text-lg bg-gray-100 text-gray-700">
+                            🎯 Selecione números para ver sua estratégia
+                        </div>
+                        
+                        <!-- Dica Dinâmica -->
+                        <div id="dicaEstrategia" class="mt-3 text-center text-sm bg-yellow-100 border border-yellow-300 rounded p-2 text-yellow-800">
+                            💡 <strong>Dica:</strong> No Super Sete cada coluna tem 5 pares (0,2,4,6,8) e 5 ímpares (1,3,5,7,9)
+                        </div>
+                    </div>
+
+                    <!-- Análise Complementar -->
                     <div id="analiseJogo" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <div class="text-sm font-medium text-blue-800 mb-2">📊 Status do Jogo:</div>
+                        <div class="text-sm font-medium text-blue-800 mb-2">📊 Análise Complementar:</div>
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <div>Colunas preenchidas: <span id="colunasCount" class="font-bold">0/7</span></div>
                             <div>Dígitos únicos: <span id="digitosUnicos" class="font-bold">0</span></div>
@@ -388,12 +451,24 @@
                     <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                         <h3 class="text-xl font-bold text-green-800 mb-3">📋 Passo a Passo:</h3>
                         <div class="space-y-3 text-green-700">
-                            <p><strong>1. Entenda o jogo:</strong> Super Sete tem 7 colunas independentes</p>
-                            <p><strong>2. Selecione os números:</strong> Escolha 1 número (0-9) em cada uma das 7 colunas</p>
-                            <p><strong>3. Validação automática:</strong> Sistema verifica se todas as colunas estão preenchidas</p>
-                            <p><strong>4. Análise de padrões:</strong> Veja quantos dígitos únicos seu jogo tem</p>
+                            <p><strong>1. Estratégia de Pares/Ímpares:</strong> Veja como números pares/ímpares se distribuíram no último sorteio</p>
+                            <p><strong>2. Entenda o jogo:</strong> Super Sete tem 7 colunas independentes</p>
+                            <p><strong>3. Acompanhe o contador:</strong> Veja em tempo real sua distribuição de pares/ímpares</p>
+                            <p><strong>4. Validação automática:</strong> Sistema verifica se todas as colunas estão preenchidas</p>
                             <p><strong>5. Custo fixo:</strong> Cada jogo custa R$ 2,50</p>
                             <p><strong>6. Download:</strong> Exporte seus jogos em HTML, TXT ou XLSX</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 class="text-xl font-bold text-blue-800 mb-3">⚪ Estratégia de Pares/Ímpares (Super Sete):</h3>
+                        <div class="space-y-2 text-blue-700">
+                            <p><strong>📊 Análise por posição:</strong> Conta quantos números pares/ímpares você escolheu</p>
+                            <p><strong>🎯 Meta dinâmica:</strong> Baseada na distribuição do último sorteio</p>
+                            <p><strong>📈 Contador duplo:</strong> Veja claramente quantos pares/ímpares selecionou</p>
+                            <p><strong>✅ Feedback inteligente:</strong> "Faltam: X pares e Y ímpares" em tempo real</p>
+                            <p><strong>💡 Pool equilibrado:</strong> 5 números pares e 5 ímpares por coluna (0-9)</p>
+                            <p><strong>🎯 Estratégia posicional:</strong> Cada coluna é independente, balanceie globalmente</p>
                         </div>
                     </div>
 
@@ -410,9 +485,9 @@
                         </div>
                     </div>
 
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h3 class="text-xl font-bold text-blue-800 mb-3">🎯 Como Funciona o Super Sete:</h3>
-                        <div class="space-y-2 text-blue-700">
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <h3 class="text-xl font-bold text-yellow-800 mb-3">🎯 Como Funciona o Super Sete:</h3>
+                        <div class="space-y-2 text-yellow-700">
                             <p><strong>7 Colunas:</strong> Cada coluna representa uma posição no jogo</p>
                             <p><strong>Números 0-9:</strong> Cada coluna tem 10 opções (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)</p>
                             <p><strong>1 por coluna:</strong> Você deve escolher exatamente 1 número em cada coluna</p>
@@ -421,12 +496,12 @@
                         </div>
                     </div>
 
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <h3 class="text-xl font-bold text-yellow-800 mb-3">💰 Sistema de Premiação:</h3>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h3 class="text-xl font-bold text-red-800 mb-3">💰 Sistema de Premiação:</h3>
                         <div class="space-y-3">
-                            <div class="bg-white p-3 rounded border border-yellow-300">
-                                <div class="text-sm font-medium text-yellow-800 mb-2">🏆 Faixas de Premiação:</div>
-                                <div class="grid grid-cols-1 gap-2 text-xs text-yellow-700">
+                            <div class="bg-white p-3 rounded border border-red-300">
+                                <div class="text-sm font-medium text-red-800 mb-2">🏆 Faixas de Premiação:</div>
+                                <div class="grid grid-cols-1 gap-2 text-xs text-red-700">
                                     <div><strong>7 acertos:</strong> Prêmio máximo</div>
                                     <div><strong>6 acertos:</strong> Prêmio alto</div>
                                     <div><strong>5 acertos:</strong> Prêmio médio</div>
@@ -440,7 +515,7 @@
                                 <div><strong>Desenhos:</strong> Terça, Quinta e Sábado</div>
                             </div>
                             
-                            <div class="text-xs text-yellow-600">
+                            <div class="text-xs text-red-600">
                                 💡 <strong>Dica:</strong> Varie os números entre as colunas para aumentar suas chances!
                             </div>
                         </div>
@@ -528,6 +603,38 @@
             // Próximo concurso
             document.querySelector('.text-2xl.font-bold.text-supersete').textContent = 
                 `Prêmio Estimado: ${formatarMoeda(data.valorEstimadoProximoConcurso || 5300000)}`;
+
+            // 🎯 NOVA FUNCIONALIDADE PRINCIPAL: Analisar pares/ímpares do último sorteio
+            analisarParesImparesUltimoSorteio(numerosSorteio);
+        }
+
+        // 🎯 NOVA FUNCIONALIDADE PRINCIPAL: Analisar pares/ímpares do último sorteio
+        function analisarParesImparesUltimoSorteio(numeros) {
+            let paresUltimoSorteio = 0;
+            let imparesUltimoSorteio = 0;
+            
+            numeros.forEach(num => {
+                const numero = parseInt(num);
+                if (numero % 2 === 0) {
+                    paresUltimoSorteio++;
+                } else {
+                    imparesUltimoSorteio++;
+                }
+            });
+            
+            // Armazenar dados globalmente
+            window.paresUltimoSorteio = paresUltimoSorteio;
+            window.imparesUltimoSorteio = imparesUltimoSorteio;
+            
+            // 🎯 ATUALIZAR INTERFACE COM OS DADOS ESTATÍSTICOS
+            document.getElementById('paresUltimoSorteio').textContent = paresUltimoSorteio;
+            document.getElementById('imparesUltimoSorteio').textContent = imparesUltimoSorteio;
+            document.getElementById('metaPares').textContent = paresUltimoSorteio;
+            document.getElementById('metaImpares').textContent = imparesUltimoSorteio;
+            
+            console.log(`Último sorteio: ${numeros.join(' ')} = ${paresUltimoSorteio} pares, ${imparesUltimoSorteio} ímpares`);
+            
+            atualizarContadorParesImpares();
         }
 
         // Identificar números sorteados para bloqueio
@@ -554,6 +661,92 @@
         // Inicializar interface
         function inicializarInterface() {
             criarGridColunas();
+            atualizarContadorParesImpares();
+        }
+
+        // 🎯 NOVA FUNCIONALIDADE PRINCIPAL: Atualizar contador de pares/ímpares
+        function atualizarContadorParesImpares() {
+            let paresAtuais = 0;
+            let imparesAtuais = 0;
+            
+            numerosSelecionados.forEach(numero => {
+                if (numero !== null) {
+                    if (numero % 2 === 0) {
+                        paresAtuais++;
+                    } else {
+                        imparesAtuais++;
+                    }
+                }
+            });
+            
+            const metaPares = window.paresUltimoSorteio || 4;
+            const metaImpares = window.imparesUltimoSorteio || 3;
+            
+            // Atualizar contadores visuais
+            document.getElementById('paresAtuais').textContent = paresAtuais;
+            document.getElementById('imparesAtuais').textContent = imparesAtuais;
+            
+            // Aplicar animação de destaque
+            document.getElementById('paresAtuais').classList.add('contador-destaque');
+            document.getElementById('imparesAtuais').classList.add('contador-destaque');
+            
+            setTimeout(() => {
+                document.getElementById('paresAtuais').classList.remove('contador-destaque');
+                document.getElementById('imparesAtuais').classList.remove('contador-destaque');
+            }, 500);
+            
+            // 🎯 AVALIAR ESTRATÉGIA E MOSTRAR STATUS
+            const totalNumeros = numerosSelecionados.filter(n => n !== null).length;
+            const statusEl = document.getElementById('statusEstrategia');
+            const dicaEl = document.getElementById('dicaEstrategia');
+            
+            if (totalNumeros === 0) {
+                statusEl.textContent = '🎯 Selecione números para ver sua estratégia';
+                statusEl.className = 'text-center p-3 rounded-lg font-bold text-lg bg-gray-100 text-gray-700';
+                dicaEl.innerHTML = '💡 <strong>Dica:</strong> No Super Sete cada coluna tem 5 pares (0,2,4,6,8) e 5 ímpares (1,3,5,7,9)';
+            } else if (totalNumeros < 7) {
+                // Ainda selecionando
+                const paresRestantes = Math.max(0, metaPares - paresAtuais);
+                const imparesRestantes = Math.max(0, metaImpares - imparesAtuais);
+                
+                if (paresRestantes > 0 || imparesRestantes > 0) {
+                    let faltam = [];
+                    if (paresRestantes > 0) faltam.push(`${paresRestantes} pares`);
+                    if (imparesRestantes > 0) faltam.push(`${imparesRestantes} ímpares`);
+                    
+                    statusEl.textContent = `📍 Faltam: ${faltam.join(' e ')}`;
+                    statusEl.className = 'text-center p-3 rounded-lg font-bold text-lg bg-blue-100 text-blue-800';
+                    dicaEl.innerHTML = `💡 <strong>Continue:</strong> Selecione mais ${faltam.join(' e ')} para seguir a estratégia`;
+                } else {
+                    statusEl.textContent = '✅ Estratégia completa! Continue selecionando...';
+                    statusEl.className = 'text-center p-3 rounded-lg font-bold text-lg bg-yellow-100 text-yellow-800';
+                    dicaEl.innerHTML = `💡 <strong>Perfeito:</strong> Você já tem a distribuição ideal!`;
+                }
+            } else {
+                // 7 números selecionados - avaliar resultado final
+                if (paresAtuais === metaPares && imparesAtuais === metaImpares) {
+                    statusEl.textContent = '🎯 ESTRATÉGIA PERFEITA! Distribuição idêntica ao último sorteio';
+                    statusEl.className = 'text-center p-3 rounded-lg font-bold text-lg bg-green-200 text-green-800 meta-atingida';
+                    dicaEl.innerHTML = `🏆 <strong>Excelente:</strong> Sua distribuição segue exatamente o último sorteio!`;
+                } else if (Math.abs(paresAtuais - metaPares) <= 1) {
+                    statusEl.textContent = '✅ Estratégia muito boa! Distribuição próxima';
+                    statusEl.className = 'text-center p-3 rounded-lg font-bold text-lg bg-green-100 text-green-800';
+                    dicaEl.innerHTML = `👍 <strong>Bom:</strong> Sua distribuição está próxima da estatística`;
+                } else {
+                    statusEl.textContent = '⚠️ Estratégia diferente do padrão estatístico';
+                    statusEl.className = 'text-center p-3 rounded-lg font-bold text-lg bg-red-100 text-red-800 meta-excedida';
+                    
+                    if (paresAtuais > metaPares + 1) {
+                        dicaEl.innerHTML = `📊 <strong>Atenção:</strong> Muitos números pares (${paresAtuais}). Último sorteio teve ${metaPares}`;
+                    } else if (imparesAtuais > metaImpares + 1) {
+                        dicaEl.innerHTML = `📊 <strong>Atenção:</strong> Muitos números ímpares (${imparesAtuais}). Último sorteio teve ${metaImpares}`;
+                    } else {
+                        dicaEl.innerHTML = `⚡ <strong>Atenção:</strong> Distribuição muito diferente do último sorteio`;
+                    }
+                }
+            }
+            
+            // Atualizar análise complementar
             atualizarAnaliseJogo();
         }
 
@@ -659,7 +852,7 @@
             btn.classList.add('selecionado');
             numerosSelecionados[coluna] = numero;
             
-            atualizarAnaliseJogo();
+            atualizarContadorParesImpares();
             validarBotaoAdicionar();
         }
 
@@ -728,7 +921,7 @@
             document.querySelectorAll('.numero-super').forEach(btn => {
                 btn.classList.remove('selecionado');
             });
-            atualizarAnaliseJogo();
+            atualizarContadorParesImpares();
             validarBotaoAdicionar();
         }
 
@@ -761,7 +954,9 @@
                 id: Date.now(),
                 numeros: [...numerosSelecionados],
                 custo: custoJogo,
-                digitosUnicos: new Set(numerosSelecionados).size
+                digitosUnicos: new Set(numerosSelecionados).size,
+                pares: numerosSelecionados.filter(n => n % 2 === 0).length,
+                impares: numerosSelecionados.filter(n => n % 2 !== 0).length
             };
             
             jogosAdicionados.push(jogo);
@@ -789,6 +984,8 @@
                         <span class="font-bold text-supersete">Jogo ${index + 1}</span>
                         <div class="flex gap-2">
                             <span class="digito-badge">${jogo.digitosUnicos} únicos</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">${jogo.pares}P</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">${jogo.impares}I</span>
                             <button onclick="removerJogo(${jogo.id})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">
                                 🗑️
                             </button>
@@ -800,7 +997,7 @@
                         ).join('')}
                     </div>
                     <div class="text-sm text-gray-600">
-                        7 colunas - ${formatarMoeda(jogo.custo)}
+                        7 colunas - ${formatarMoeda(jogo.custo)} | ${jogo.pares} pares, ${jogo.impares} ímpares
                     </div>
                 `;
                 
@@ -908,6 +1105,7 @@
                  border-radius: 8px; text-align: center; line-height: 35px; margin: 2px; font-weight: bold; }
         .total { text-align: center; margin-top: 20px; font-size: 18px; font-weight: bold; color: #A9CF46; }
         .coluna { font-size: 10px; color: #666; }
+        .pares-impares { font-size: 12px; color: #666; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -925,7 +1123,9 @@
                 `<span class="numero" title="Coluna ${colIndex + 1}">${num}</span>`
             ).join('')}
         </div>
-        <p><small>${jogo.digitosUnicos} dígitos únicos</small></p>
+        <div class="pares-impares">
+            ${jogo.digitosUnicos} dígitos únicos | ${jogo.pares} pares, ${jogo.impares} ímpares
+        </div>
     </div>`;
             });
             
@@ -956,7 +1156,7 @@
         // Download XLSX
         function downloadXLSX(jogos) {
             const dados = [
-                ['Jogo', 'Col 1', 'Col 2', 'Col 3', 'Col 4', 'Col 5', 'Col 6', 'Col 7', 'Dígitos Únicos', 'Custo']
+                ['Jogo', 'Col 1', 'Col 2', 'Col 3', 'Col 4', 'Col 5', 'Col 6', 'Col 7', 'Dígitos Únicos', 'Pares', 'Ímpares', 'Custo']
             ];
             
             jogos.forEach((jogo, index) => {
@@ -964,12 +1164,14 @@
                     `Jogo ${index + 1}`,
                     ...jogo.numeros,
                     jogo.digitosUnicos,
+                    jogo.pares,
+                    jogo.impares,
                     jogo.custo
                 ]);
             });
             
             const total = jogos.length * custoJogo;
-            dados.push(['', '', '', '', '', '', '', 'TOTAL:', jogos.length + ' jogo(s)', total]);
+            dados.push(['', '', '', '', '', '', '', 'TOTAL:', '', '', jogos.length + ' jogo(s)', total]);
             
             const ws = XLSX.utils.aoa_to_sheet(dados);
             const wb = XLSX.utils.book_new();
